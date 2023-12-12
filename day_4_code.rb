@@ -20,3 +20,22 @@ lines.each do |line|
 end
 
 puts "Part 1: #{grand_total}"
+
+# Part 2
+card_counts = Hash.new { |h, k| h[k] = 1 } # this block will be executed everytime we encounter a new key in this hash
+
+lines.each_with_index do |line, index|
+  card, numbers = line.split(": ")
+  id = card.split(" ").last.to_i
+  winners, all = numbers.split(" | ").map { |x| x.split(" ").map { |x| x.to_i } }
+  winning_count = (winners & all).length
+  card_counts[id].times do
+    winning_count.times do |i|
+      card_counts[id + i + 1] += 1
+    end
+  end
+end
+
+grand_total = card_counts.values.sum
+
+puts "Part 2: #{grand_total}"
